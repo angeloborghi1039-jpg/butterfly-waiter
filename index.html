@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Butterfly Trainer</title>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Butterfly"/>
+  <meta name="theme-color" content="#08080d"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;background:#08080d}
+    body{font-family:'Georgia',serif}
+
+    /* LOGIN */
+    #login-screen{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      min-height:100vh;min-height:100dvh;width:100%;padding:32px 24px;
+      background:#08080d;
+    }
+    .l-icon{
+      width:96px;height:96px;border-radius:24px;
+      background:linear-gradient(145deg,#12100a,#0a0805);
+      border:1px solid #d4a85333;display:flex;align-items:center;justify-content:center;
+      margin-bottom:28px;
+      box-shadow:0 0 50px #d4a85318,0 8px 32px rgba(0,0,0,.8),inset 0 1px 0 #d4a85222;
+      animation:pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{box-shadow:0 0 30px #d4a85312,0 8px 32px rgba(0,0,0,.8)}
+      50%{box-shadow:0 0 60px #d4a85328,0 8px 40px rgba(0,0,0,.9)}
+    }
+    .l-star{font-size:10px;letter-spacing:.45em;color:#d4a853;margin-bottom:12px;font-family:'Cinzel',serif}
+    .l-title{font-size:38px;letter-spacing:.2em;color:#f5f0e8;margin-bottom:6px;font-family:'Cinzel',serif;font-weight:400}
+    .l-sub{font-size:12px;letter-spacing:.25em;color:#706858;font-style:italic;margin-bottom:48px}
+    .l-input{
+      background:#0e0e18;border:1px solid #2a2a35;color:#e8e0d0;
+      padding:15px 20px;border-radius:8px;font-size:16px;font-family:'Georgia',serif;
+      width:100%;max-width:300px;margin-bottom:12px;text-align:center;
+      letter-spacing:.15em;outline:none;transition:border-color .2s;
+    }
+    .l-input:focus{border-color:#d4a85366}
+    .l-btn{
+      background:linear-gradient(135deg,#d4a853,#b88a3a);color:#08080d;border:none;
+      padding:15px 44px;border-radius:6px;font-size:11px;letter-spacing:.3em;
+      font-family:'Cinzel',serif;cursor:pointer;width:100%;max-width:300px;
+      box-shadow:0 4px 20px #d4a85333;transition:opacity .2s;
+    }
+    .l-btn:active{opacity:.85}
+    .l-err{color:#ca7a7a;font-size:13px;font-style:italic;margin-top:14px;min-height:18px;font-family:'Cinzel',serif;letter-spacing:.05em}
+
+    /* APP */
+    #app-root{display:none;width:100%;min-height:100vh;min-height:100dvh}
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ─────────────────────────────────────────────── -->
+<div id="login-screen">
+  <div class="l-icon">
+    <svg width="58" height="58" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 50 C40 38 20 30 10 18 C8 15 10 10 14 12 C26 18 38 30 50 50Z" fill="url(#lg1)" opacity=".95"/>
+      <path d="M50 50 C36 56 18 52 8 62 C5 65 7 70 11 68 C24 62 38 58 50 50Z" fill="url(#lg1)" opacity=".75"/>
+      <path d="M50 50 C60 38 80 30 90 18 C92 15 90 10 86 12 C74 18 62 30 50 50Z" fill="url(#lg2)" opacity=".95"/>
+      <path d="M50 50 C64 56 82 52 92 62 C95 65 93 70 89 68 C76 62 62 58 50 50Z" fill="url(#lg2)" opacity=".75"/>
+      <path d="M50 50 C44 42 30 36 22 28" stroke="#f5e6c0" stroke-width=".5" opacity=".4" stroke-linecap="round"/>
+      <path d="M50 50 C56 42 70 36 78 28" stroke="#f5e6c0" stroke-width=".5" opacity=".4" stroke-linecap="round"/>
+      <ellipse cx="50" cy="50" rx="2.5" ry="16" fill="url(#lgbody)"/>
+      <circle cx="50" cy="33" r="3" fill="url(#lgbody)"/>
+      <path d="M50 33 C47 26 43 22 40 18" stroke="#d4a853" stroke-width="1" stroke-linecap="round" opacity=".8"/>
+      <path d="M50 33 C53 26 57 22 60 18" stroke="#d4a853" stroke-width="1" stroke-linecap="round" opacity=".8"/>
+      <circle cx="40" cy="18" r="1.5" fill="#d4a853" opacity=".8"/>
+      <circle cx="60" cy="18" r="1.5" fill="#d4a853" opacity=".8"/>
+      <defs>
+        <linearGradient id="lg1" x1="10" y1="18" x2="50" y2="60" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f5e6a0"/><stop offset="50%" stop-color="#d4a853"/><stop offset="100%" stop-color="#8a6020"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="90" y1="18" x2="50" y2="60" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f5e6a0"/><stop offset="50%" stop-color="#d4a853"/><stop offset="100%" stop-color="#8a6020"/>
+        </linearGradient>
+        <linearGradient id="lgbody" x1="50" y1="30" x2="50" y2="66" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f0d878"/><stop offset="100%" stop-color="#8a6020"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <div class="l-star">✦ UNA STELLA MICHELIN ✦</div>
+  <div class="l-title">BUTTERFLY</div>
+  <div class="l-sub">Trainer · Chef Fabrizio Girasoli</div>
+  <input class="l-input" type="password" id="pwd" placeholder="Password" autocomplete="current-password"/>
+  <button class="l-btn" id="login-btn">ACCEDI</button>
+  <div class="l-err" id="err"></div>
+</div>
+
+<!-- ── APP ───────────────────────────────────────────────── -->
+<div id="app-root"></div>
+
+<!-- React UMD -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<!-- Babel standalone for JSX -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+
+<script>
+(async function() {
+  const PWD = "Ristorantebutterfly";
+  async function sha256(s) {
+    const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("");
+  }
+  const correctHash = await sha256(PWD);
+
+  function showApp() {
+    document.getElementById("login-screen").style.display = "none";
+    const root = document.getElementById("app-root");
+    root.style.display = "block";
+    if (!window.__appMounted) {
+      window.__appMounted = true;
+      // Execute the inline app script
+      Babel.transformScriptTags();
+    }
+  }
+
+  // Already logged in this session?
+  if (sessionStorage.getItem("bf_ok") === correctHash) { showApp(); return; }
+
+  async function tryLogin() {
+    const val = document.getElementById("pwd").value.trim();
+    if (!val) return;
+    const h = await sha256(val);
+    if (h === correctHash) {
+      sessionStorage.setItem("bf_ok", correctHash);
+      showApp();
+    } else {
+      document.getElementById("err").textContent = "Password errata — riprova";
+      document.getElementById("pwd").value = "";
+      document.getElementById("pwd").focus();
+    }
+  }
+
+  document.getElementById("login-btn").addEventListener("click", tryLogin);
+  document.getElementById("pwd").addEventListener("keydown", e => { if(e.key==="Enter") tryLogin(); });
+})();
+</script>
+
+<!-- App React (JSX) — rendered only after login -->
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useCallback } = React;
+
+const BASE = "https://www.ristorantebutterfly.it";
+
+// ─── FILTER GROUPS ────────────────────────────────────────────────
+// Each dish gets: id, name, it, en, section (portata), menus (which contexts it belongs to), img, price, course order
+const MENUS = [
+  { id: "tutti",     label: "Tutti i piatti",         short: "Tutti",      color: "#d4a853" },
+  { id: "mare",      label: "I Sapori del Mare",       short: "🌊 Mare",    color: "#5a9ab5", price: "€125" },
+  { id: "trad",      label: "Tradizione e Innovazione",short: "🍂 Trad.",   color: "#9a7a3a", price: "€125" },
+  { id: "orto",      label: "Il Mio Orto a Metri Zero",short: "🌿 Orto",   color: "#5a9a6a", price: "€125" },
+  { id: "carta",     label: "Carta",                   short: "📋 Carta",  color: "#a07080" },
+];
+
+const GALLERY = [
+  `${BASE}/immagini/gallery/2025/08/img/DSC4753-72.jpg`,
+  `${BASE}/immagini/gallery/2023/05/img/211-RistoranteButterflyaprile2023-75.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4835-77.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4233-80.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4261-81.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4112-82.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4088-78.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4445-11.jpg`,
+  `${BASE}/immagini/gallery/2023/05/img/153-RistoranteButterflyaprile2023-69.jpg`,
+  `${BASE}/immagini/gallery/2023/05/img/214-RistoranteButterflyaprile2023-76.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4163-79.jpg`,
+  `${BASE}/immagini/gallery/2025/08/img/DSC4812-87.jpg`,
+];
+
+// menus: array of menu IDs this dish appears in
+const ALL_DISHES = [
+  // ── MENU SAPORI DEL MARE ──────────────────────────────────────
+  {
+    id: 1, menus: ["mare","carta"], section: "Antipasto", course: 1, price: "€36",
+    name: "Ad'Amatrice è arrivato il mare",
+    it: "Rombo cotto dolcemente con idea di salsa Amatriciana, emulsione leggera al pecorino e cotica croccante",
+    en: "Gently cooked turbot with Amatriciana sauce, a light pecorino emulsion, and crispy pork rind",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4088-78.jpg`,
+  },
+  {
+    id: 2, menus: ["mare","carta"], section: "Antipasto", course: 2, price: "€36",
+    name: "Un toscano nella terra del sol levante",
+    it: "La ventresca di tonno rosso marinata al Ponzu e cotta sulle braci, servita come un panino al lampredotto con asparago croccante e salsa verde. In accompagnamento il tonno come un crostino toscano",
+    en: "Red tuna belly marinated in Ponzu and grilled over charcoal, served as a lampredotto sandwich with crispy asparagus and salsa verde. Accompanied by tuna as a Tuscan crostini",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto3gallery-22.jpg`,
+  },
+  {
+    id: 3, menus: ["mare","carta"], section: "Primo", course: 3, price: "€36",
+    name: "Vista mare ✶",
+    it: "Risotto Carnaroli selezione Acquerello in essenza di datterino giallo alla brace, calamaro nostrano al basilico liquirizia, il suo nero e lattuga di mare croccante",
+    en: "Carnaroli Acquerello risotto in essence of grilled yellow datterino, local squid with licorice basil, its ink and crispy sea lettuce",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto9gallery-28.jpg`,
+  },
+  {
+    id: 4, menus: ["mare","carta"], section: "Primo", course: 4, price: "€36",
+    name: "Giallo oro",
+    it: "Tagliatella velo al burro acido e pistilli di zafferano toscano, con cannolicchi in ragout e marinati ed erba ghiaccio",
+    en: "Tagliatella velo with sour butter and Tuscan saffron pistils, with razor clams in ragout, marinated, and ice grass",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto8gallery-27.jpg`,
+  },
+  {
+    id: 5, menus: ["mare","carta"], section: "Secondo", course: 5, price: "€40",
+    name: "Il pesce è nella rete",
+    it: "Il pescato d'amo in due servizi: in essenza di vongole veraci con patata dolce alla brace, gocce di aglione e aglio nero; e come fish and chips croccante in panatura di riso, maionese alla paprica affumicata e airbag di patata",
+    en: "Wild fish in two services: with clam essence, grilled sweet potato and black garlic drops; and fish-and-chips style with paprika mayonnaise and potato airbag",
+    img: `${BASE}/immagini/gallery/2023/05/img/153-RistoranteButterflyaprile2023-69.jpg`,
+  },
+  {
+    id: 6, menus: ["mare","trad","orto"], section: "Formaggi", course: 6, price: "€16–22",
+    name: "Formaggi che passione",
+    it: "Piccola selezione dei nostri formaggi dal mondo, serviti con miele di spiaggia e composte di frutta artigianali",
+    en: "A curated selection of artisanal cheeses from around the world, accompanied by coastal honey and seasonal fruit preserves",
+    img: `${BASE}/immagini/gallery/2021/12/img/Gallery4-59.jpg`,
+  },
+  {
+    id: 7, menus: ["mare","trad","orto","carta"], section: "Dessert", course: 7, price: "€16",
+    name: "La fragola, la panna... e il Buccellato",
+    it: "Consistenze di fragole fresche, crumble all'uva passa e soffiato alla panna profumata all'anice stellato",
+    en: "Consistencies of fresh strawberries, raisin crumble and puffed cream flavoured with star anise",
+    pairing: "Samos Boutari Moscato Isole Greche €12",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4163-79.jpg`,
+  },
+
+  // ── MENU TRADIZIONE E INNOVAZIONE ────────────────────────────
+  {
+    id: 8, menus: ["trad","carta"], section: "Antipasto", course: 1, price: "€36",
+    name: "Love foie gras",
+    it: "Foie gras in terrina con sentore di lampone, Muffato della Sala e il suo pan brioche",
+    en: "Foie gras in terrine with a hint of raspberry, Muffato della Sala and its brioche bread",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto7gallery-26.jpg`,
+  },
+  {
+    id: 9, menus: ["trad","carta"], section: "Antipasto", course: 2, price: "€36",
+    name: "Ritorno alla natura",
+    it: "Biancostato di agnello agli aromi del nostro orto con terrina di peperone confit, yogurt greco affumicato, gocce di passion fruit e foglia di cappero",
+    en: "Lamb chops with herbs from our garden, confit pepper terrine, smoked Greek yogurt, passion fruit drops and caper leaf",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4233-80.jpg`,
+  },
+  {
+    id: 10, menus: ["trad","carta"], section: "Primo", course: 3, price: "€36",
+    name: "Che cos'hai nella zucca?",
+    it: "Risotto Carnaroli selezione Acquerello, zucca Delica al cartoccio, essenza di melograno e speck d'anatra al fumo",
+    en: "Carnaroli Acquerello rice with braised Delica pumpkin, pomegranate juice and smoked duck speck",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4663-84.jpg`,
+  },
+  {
+    id: 11, menus: ["trad","carta"], section: "Primo", course: 4, price: "€36",
+    name: "Da Nord a Sud",
+    it: "Spaghetto artigianale di grano duro, burro di malga, colatura di alici di Cetara, tartufo nero e tuorlo d'uovo naturale cotto a 62°",
+    en: "Artisanal spaghetto with farmer butter, spring truffle, anchovies from Cetara, and organic egg yolk cooked at 62°",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto10gallery-29.jpg`,
+  },
+  {
+    id: 12, menus: ["trad","carta"], section: "Secondo", course: 5, price: "€40",
+    name: "Tradizione… Contemporanea ✶",
+    it: "Il piccione del Valdarno, il suo petto cotto in carcassa sulle braci vive, composta di mela e cipolla, corbezzolo di foie gras con cuore di Saba e cipollotto grigliato",
+    en: "Valdarno pigeon, fire-roasted on the bone, with apple-onion compote, foie gras-stuffed medlar, Saba glaze and charred spring onion",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4261-81.jpg`,
+  },
+
+  // ── MENU IL MIO ORTO A METRI ZERO ────────────────────────────
+  {
+    id: 13, menus: ["orto"], section: "Antipasto", course: 1, price: "€125 menu",
+    name: "Carota… fish and chips",
+    it: "Carota biologica aromatizzata al ponzu, in panatura croccante di riso, maionese alla paprica affumicata e airbag di patate",
+    en: "Organic carrot flavored with ponzu, in a crispy rice breading, smoked paprika mayonnaise and potato airbags",
+    img: `${BASE}/immagini/gallery/2023/05/img/153-RistoranteButterflyaprile2023-69.jpg`,
+  },
+  {
+    id: 14, menus: ["orto"], section: "Antipasto", course: 2, price: "€125 menu",
+    name: "Anima Pop",
+    it: "Il tuorlo d'uovo biologico a 62°, consistenze di asparagi, spuma al Parmigiano 36 mesi, pop corn e paprica dolce affumicata",
+    en: "Organic egg yolk at 62°, asparagus textures, 36-month-old Parmesan mousse, popcorn and smoked sweet paprika",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto5gallery-24.jpg`,
+  },
+  {
+    id: 15, menus: ["orto"], section: "Primo", course: 3, price: "€125 menu",
+    name: "Cromatismo",
+    it: "Risotto Carnaroli selezione Acquerello al cavolofiore, fusione di Blu del Mugello e polvere di limone nero",
+    en: "Carnaroli Acquerello risotto with cauliflower, Mugello blue cheese and black lemon powder",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4675-85.jpg`,
+  },
+  {
+    id: 16, menus: ["orto"], section: "Primo", course: 4, price: "€125 menu",
+    name: "Girotondo vegetale",
+    it: "Sfere di patate con cuore liquido ai carciofi, spadellate con burro di malga e pepe di Sichuan su vellutata di zucca delica e aria al Parmigiano",
+    en: "Potato balls with a liquid artichoke heart, sautéed with mountain butter and Szechuan pepper on Delica pumpkin cream and Parmigiano air",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto1Gallery-19.jpg`,
+  },
+  {
+    id: 17, menus: ["orto","carta"], section: "Secondo", course: 5, price: "€50",
+    name: "Luci a San Siro",
+    it: "Cotoletta di melanzana viola croccante con maionese alla rucola e pera estiva leggermente candita. Cialda di risotto allo zafferano con illusione di midollo vegetale",
+    en: "Crispy purple eggplant cutlet with arugula mayonnaise and lightly candied summer pear. Saffron risotto wafer with vegetable marrow illusion",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto5gallery-24.jpg`,
+  },
+  {
+    id: 18, menus: ["orto","carta"], section: "Dessert", course: 7, price: "€16",
+    name: "La gallina dalle uova d'oro",
+    it: "Ricordo di Pina Colada: soffice al cocco, ananas colante, soffio di dark Rum, la meringa flambé e il panino a vapore con la Nutella",
+    en: "Memories of Pina Colada: soft coconut, dripping pineapple, a whiff of dark rum, flambé meringue and the steamed bun with Nutella",
+    pairing: "Muskat Ottonel Auslese Tschida €12",
+    img: `${BASE}/immagini/gallery/2021/12/img/Gallery1-57.jpg`,
+  },
+
+  // ── SOLO CARTA ───────────────────────────────────────────────
+  {
+    id: 19, menus: ["carta"], section: "Antipasto", course: 1, price: "€36",
+    name: "Think Pink",
+    it: "Tartara di gambero rosa agli agrumi, soffiato di carota e limone, sfere di mandorla all'aneto e cialda croccante al pepe rosa",
+    en: "Pink shrimp tartare with citrus, carrot and lemon purée, dill almond spheres and pink pepper crispy wafer",
+    img: `${BASE}/immagini/gallery/2021/04/img/Piatto1Gallery-19.jpg`,
+  },
+  {
+    id: 20, menus: ["carta"], section: "Antipasto", course: 1, price: "€55",
+    name: "Il nostro crudo di pesce, crostacei e frutti di mare ✶",
+    it: "Crudo di pesce preparato al momento secondo il pescato del giorno. Richiede almeno 20 minuti di preparazione per conservarne la fragranza",
+    en: "Raw fish, shellfish and seafood prepared to order based on the day's catch. Minimum 20 minutes preparation time to preserve freshness",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4835-77.jpg`,
+  },
+  {
+    id: 21, menus: ["carta"], section: "Primo", course: 3, price: "€36",
+    name: "Tempo di… mezze maniche",
+    it: "Mezze maniche di grano duro Santinelli in estrazione di scampi leggermente piccante al Chipotle, scampi in ceviche allo yuzu e origano fresco",
+    en: "Santinelli durum wheat mezze maniche in slightly spicy Chipotle scampi extract, scampi in yuzu ceviche with fresh oregano",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4743-83.jpg`,
+  },
+  {
+    id: 22, menus: ["carta"], section: "Primo", course: 3, price: "€36",
+    name: "Da gustare lentamente",
+    it: "Fagottini di pasta all'ortica con lumache di vigna Bourguignonne, salsa di sedano rapa alla brace e mirtilli liofilizzati",
+    en: "Homemade nettle pasta ravioli filled with Bourguignonne vineyard snails, grilled celeriac sauce and freeze-dried blackberries",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4675-85.jpg`,
+  },
+  {
+    id: 23, menus: ["carta"], section: "Secondo", course: 5, price: "€50",
+    name: "Vapori vulcanici ✶",
+    it: "Gli scampi del Tirreno cotti all'istante su pietra lavica ardente, Parmentier di scampi, sentore di Pastis e insalata di finocchi, noci di Macadamia e morso di arancia a sorpresa",
+    en: "Tyrrhenian scampi flash-cooked on burning lava stone, scampi Parmentier, Pastis hint, fennel salad with Macadamia nuts and surprise orange",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4753-72.jpg`,
+  },
+  {
+    id: 24, menus: ["carta"], section: "Secondo", course: 5, price: "€50",
+    name: "Orient Express 2.0",
+    it: "L'astice in 3 servizi: cotto sulle braci in bambù su riso selvaggio e ortaggi con maionese allo Yuzu; la chela croccante e salsa orientale; nel tortellino in brodo dashi",
+    en: "Lobster in 3 services: grilled in bamboo over wild rice and vegetables with Yuzu mayonnaise; crispy claw with oriental sauce; in tortellino with dashi broth",
+    img: `${BASE}/immagini/gallery/2023/05/img/211-RistoranteButterflyaprile2023-75.jpg`,
+  },
+  {
+    id: 25, menus: ["carta"], section: "Secondo", course: 5, price: "€40",
+    name: "Love Churrasco",
+    it: "Controfiletto di Angus cotto al carbone, il nostro Chimichurri, maionese al lime, insalatina di avocado e mais con coriandolo fresco",
+    en: "BBQ Angus beef sirloin with our Chimichurri sauce, lime mayonnaise, sweet corn, avocado and fresh coriander salad",
+    img: `${BASE}/immagini/gallery/2023/05/img/214-RistoranteButterflyaprile2023-76.jpg`,
+  },
+  {
+    id: 26, menus: ["carta"], section: "Secondo", course: 5, price: "€40",
+    name: "Roger Rabbit",
+    it: "Il coniglio di fattoria in farcia di olive amare e terrina del suo fegatino, soffice di carota al limone e juice al porto. In accompagnamento la Torta di rose ai frutti rossi",
+    en: "Farm rabbit roasted with bitter olives and its liver terrine, creamy carrot with lemon and Port juice, accompanied by red fruit 'Torta di rose'",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4112-82.jpg`,
+  },
+  {
+    id: 27, menus: ["carta"], section: "Dessert", course: 7, price: "€16",
+    name: "Il Pozzo dei Desideri",
+    it: "La panna cotta a bassa temperatura e il secchio fondente con colata di ciliegie amarene",
+    en: "Slow cooked panna cotta, served with dark chocolate and cascade of amarena cherries",
+    pairing: "Donna Daria Passito colli Euganei €15",
+    img: `${BASE}/immagini/gallery/2025/08/img/DSC4812-87.jpg`,
+  },
+  {
+    id: 28, menus: ["carta"], section: "Dessert", course: 7, price: "€16",
+    name: "Preziose dolcezze",
+    it: "Cremoso al pistacchio di Bronte DOP, croccante alla grué di cacao e caviale di mirtillo nero, in accompagnamento blinis al caramello salato",
+    en: "Creamy Bronte pistachio DOP, crunchy cocoa grué and blackberry caviar, accompanied by salted caramel blinis",
+    pairing: "Zhabib Passito di Ustica Grotta dell'Oro €14",
+    img: `${BASE}/immagini/gallery/2021/12/img/GalleryPozzo-67.jpg`,
+  },
+  {
+    id: 29, menus: ["carta"], section: "Dessert", course: 7, price: "€20",
+    name: "Selezione di Cioccolato Grand Cru e Rum",
+    it: "Un'intrigante selezione di cioccolati monorigine dalle migliori zone del mondo con 4 varietà di cacao per una straordinaria esperienza gustativa, accompagnate da un calice di rum selezionato delle isole Caraibiche",
+    en: "Intriguing single-origin chocolate selection from the world's finest regions — four cocoa varieties for an extraordinary tasting experience, paired with a glass of selected Caribbean rum",
+    img: `${BASE}/immagini/gallery/2021/12/img/Gallery4-59.jpg`,
+  },
+];
+
+const SECTION_ORDER = ["Antipasto","Primo","Secondo","Formaggi","Dessert"];
+const MODES = { HOME: "home", CARDS: "cards", QUIZ: "quiz", SPEED: "speed", REVIEW: "review" };
+
+async function callClaude(prompt) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  const d = await res.json();
+  if (!d.content || d.error) throw new Error(d.error?.message || "API error");
+  return d.content.map(b => b.text || "").join("");
+}
+
+async function genScript(dish) {
+  return callClaude(
+    `Sei il maître del Ristorante Butterfly (1 stella Michelin, Lucca), Chef Fabrizio Girasoli.
+Crea uno script di presentazione al tavolo per: "${dish.name}"
+Descrizione: ${dish.it}
+
+Formato ESATTO (nessun testo aggiuntivo):
+ANNUNCIO: [1 frase che annuncia il piatto, nome poetico e ingredienti principali]
+TECNICA: [1-2 frasi su tecnica di cottura e profilo aromatico]
+NOTA: [1 frase su abbinamento vino o allergenicità rilevante]
+
+Massimo 80 parole totali. Tono raffinato da alta cucina italiana.`
+  );
+}
+
+async function genQuiz(dish, script) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 600,
+      system: "Sei un trainer per sommelier e maître di alta cucina. Rispondi SEMPRE e SOLO con JSON puro, nessun altro testo.",
+      messages: [{
+        role: "user",
+        content: `Piatto: ${dish.name}
+Descrizione: ${dish.it}
+Script: ${script}
+
+Crea UNA domanda quiz sulla presentazione. Formato JSON:
+{"question":"...","options":["A) ...","B) ...","C) ...","D) ..."],"correct":"A","explanation":"..."}`
+      }],
+    }),
+  });
+  const d = await res.json();
+  if (!d.content || d.error) throw new Error(d.error?.message || "API error");
+  const raw = d.content.map(b => b.text || "").join("").trim();
+  const cleaned = raw.replace(/```json|```/g, "").trim();
+  const match = cleaned.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error("No JSON in response: " + raw.slice(0, 100));
+  return JSON.parse(match[0]);
+}
+
+function App() {
+  const [mode, setMode] = useState(MODES.HOME);
+  const [activeMenu, setActiveMenu] = useState("tutti");
+  const [scripts, setScripts] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [idx, setIdx] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [progress, setProgress] = useState({});
+  const [lang, setLang] = useState("it");
+  const [toast, setToast] = useState(null);
+  const [quizData, setQuizData] = useState(null);
+  const [quizAns, setQuizAns] = useState(null);
+  const [quizError, setQuizError] = useState(false);
+  const [speedQ, setSpeedQ] = useState([]);
+  const [speedI, setSpeedI] = useState(0);
+  const [speedScore, setSpeedScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [speedActive, setSpeedActive] = useState(false);
+  const [speedDone, setSpeedDone] = useState(false);
+  const [heroIdx, setHeroIdx] = useState(0);
+  const timerRef = useRef(null);
+
+  // Filtered dish list based on active menu
+  const filtered = activeMenu === "tutti"
+    ? ALL_DISHES
+    : ALL_DISHES.filter(d => d.menus.includes(activeMenu));
+  const dish = filtered[idx] || filtered[0];
+  const menuMeta = MENUS.find(m => m.id === activeMenu);
+
+  useEffect(() => {
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % GALLERY.length), 3800);
+    return () => clearInterval(t);
+  }, []);
+
+  const showToast = (msg, type = "ok") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 2000);
+  };
+
+  const getScript = useCallback(async (d) => {
+    if (scripts[d.id]) return scripts[d.id];
+    setLoading(true);
+    try {
+      const s = await genScript(d);
+      setScripts(p => ({ ...p, [d.id]: s }));
+      return s;
+    } finally { setLoading(false); }
+  }, [scripts]);
+
+  const mark = (d, status) => {
+    setProgress(p => ({ ...p, [d.id]: status }));
+    showToast(status === "known" ? "✓ Memorizzato" : "↩ Da ripassare", status === "known" ? "ok" : "warn");
+  };
+
+  // Load script on flashcard change
+  useEffect(() => {
+    if (mode === MODES.CARDS && dish) { setFlipped(false); getScript(dish); }
+  }, [idx, mode, activeMenu]);
+
+  // Quiz load
+  const loadQuiz = async () => {
+    setQuizData(null); setQuizAns(null); setQuizError(false);
+    setLoading(true);
+    try {
+      const s = await getScript(dish);
+      const q = await genQuiz(dish, s);
+      setQuizData(q);
+    } catch (e) {
+      console.error("Quiz error:", e);
+      setQuizError(true);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (mode !== MODES.QUIZ || !dish) return;
+    loadQuiz();
+  }, [idx, mode, activeMenu]);
+
+  // Speed
+  const startSpeed = async () => {
+    const pool = activeMenu === "tutti" ? ALL_DISHES : ALL_DISHES.filter(d => d.menus.includes(activeMenu));
+    const q = [...pool].sort(() => Math.random() - 0.5).slice(0, Math.min(8, pool.length));
+    setSpeedQ(q); setSpeedI(0); setSpeedScore(0);
+    setTimeLeft(30); setSpeedActive(true); setSpeedDone(false);
+    setLoading(true);
+    await getScript(q[0]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!speedActive) return;
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) { clearInterval(timerRef.current); setSpeedActive(false); setSpeedDone(true); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [speedActive]);
+
+  const speedNext = async (knew) => {
+    if (knew) { setSpeedScore(s => s + 1); mark(speedQ[speedI], "known"); }
+    else mark(speedQ[speedI], "review");
+    const next = speedI + 1;
+    if (next >= speedQ.length) { clearInterval(timerRef.current); setSpeedActive(false); setSpeedDone(true); return; }
+    setSpeedI(next);
+    setLoading(true);
+    await getScript(speedQ[next]);
+    setLoading(false);
+  };
+
+  const knownCount = Object.values(progress).filter(v => v === "known").length;
+  const reviewCount = Object.values(progress).filter(v => v === "review").length;
+
+  const parseScript = (txt) => {
+    if (!txt) return [];
+    return txt.split("\n").filter(Boolean).map(line => {
+      const ci = line.indexOf(":");
+      if (ci === -1) return { label: "", body: line.trim() };
+      return { label: line.slice(0, ci).trim(), body: line.slice(ci + 1).trim() };
+    });
+  };
+
+  const LABEL_COLOR = { ANNUNCIO: "#d4a853", TECNICA: "#7aab8a", NOTA: "#7a9ab5" };
+
+  // ─── MENU SELECTOR BAR (shared across modes) ──────────────────
+  const MenuBar = ({ onSelect }) => (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22 }}>
+      {MENUS.map(m => {
+        const isActive = activeMenu === m.id;
+        const count = m.id === "tutti" ? ALL_DISHES.length : ALL_DISHES.filter(d => d.menus.includes(m.id)).length;
+        return (
+          <button key={m.id} onClick={() => { setActiveMenu(m.id); setIdx(0); onSelect && onSelect(); }} style={{
+            background: isActive ? m.color + "22" : "transparent",
+            border: `1px solid ${isActive ? m.color : "#252530"}`,
+            color: isActive ? m.color : "#504848",
+            padding: "6px 14px", borderRadius: 20, cursor: "pointer",
+            fontFamily: "'Cinzel', serif", fontSize: 10, letterSpacing: "0.12em",
+            transition: "all 0.2s", whiteSpace: "nowrap",
+          }}>
+            {m.short} <span style={{ opacity: 0.6 }}>({count})</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  // ─── RENDER ───────────────────────────────────────────────────
+  return (
+    <div style={{ minHeight: "100vh", background: "#08080d", color: "#e8e0d0", fontFamily: "'Cormorant Garamond','Georgia',serif" }}>
+      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet" />
+
+      {toast && (
+        <div style={{
+          position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", zIndex: 999,
+          background: toast.type === "ok" ? "#0d2010" : toast.type === "warn" ? "#2a1a05" : "#200808",
+          border: `1px solid ${toast.type === "ok" ? "#3a7a3a" : toast.type === "warn" ? "#7a5a1a" : "#7a2a2a"}`,
+          color: "#e8e0d0", padding: "10px 28px", borderRadius: 4, fontSize: 13,
+          letterSpacing: "0.08em", fontFamily: "'Cinzel',serif", pointerEvents: "none",
+        }}>{toast.msg}</div>
+      )}
+
+      {/* ── HOME ───────────────────────────────────────────────── */}
+      {mode === MODES.HOME && (
+        <div>
+          {/* Hero */}
+          <div style={{ position: "relative", height: "52vh", overflow: "hidden" }}>
+            {GALLERY.map((src, i) => (
+              <div key={i} style={{
+                position: "absolute", inset: 0,
+                backgroundImage: `url(${src})`, backgroundSize: "cover", backgroundPosition: "center",
+                opacity: i === heroIdx ? 1 : 0, transition: "opacity 1.4s ease",
+              }} />
+            ))}
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom,rgba(8,8,13,.25) 0%,rgba(8,8,13,.88) 100%)" }} />
+            <div style={{ position: "absolute", bottom: 36, left: 0, right: 0, textAlign: "center" }}>
+              <div style={{ fontFamily: "'Cinzel',serif", fontSize: 10, letterSpacing: "0.5em", color: "#d4a853", marginBottom: 10 }}>✦ UNA STELLA MICHELIN ✦</div>
+              <h1 style={{ margin: 0, fontFamily: "'Cinzel',serif", fontSize: "clamp(28px,6vw,50px)", fontWeight: 400, letterSpacing: "0.18em", color: "#f5f0e8" }}>BUTTERFLY</h1>
+              <div style={{ fontStyle: "italic", color: "#907858", fontSize: 15, marginTop: 8 }}>Chef Fabrizio Girasoli · Lucca</div>
+            </div>
+          </div>
+
+          <div style={{ maxWidth: 640, margin: "0 auto", padding: "30px 18px 60px" }}>
+            {/* Stats */}
+            {(knownCount > 0 || reviewCount > 0) && (
+              <div style={{ display: "flex", gap: 28, justifyContent: "center", marginBottom: 28 }}>
+                <Stat label="Memorizzati" val={knownCount} c="#4a8a5a" />
+                <Stat label="Da ripassare" val={reviewCount} c="#8a6a2a" />
+                <Stat label="Totale piatti" val={ALL_DISHES.length} c="#6a6a9a" />
+              </div>
+            )}
+
+            {/* Menu degustazione cards */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontFamily: "'Cinzel',serif", fontSize: 9, letterSpacing: "0.4em", color: "#504848", marginBottom: 14 }}>SCEGLI IL MENU DA STUDIARE</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {MENUS.filter(m => m.id !== "tutti").map(m => {
+                  const count = ALL_DISHES.filter(d => d.menus.includes(m.id)).length;
+                  const doneCount = ALL_DISHES.filter(d => d.menus.includes(m.id) && progress[d.id] === "known").length;
+                  return (
+                    <button key={m.id} onClick={() => { setActiveMenu(m.id); setMode(MODES.CARDS); setIdx(0); }} style={{
+                      display: "flex", alignItems: "center", gap: 16,
+                      background: "#0e0e18", border: `1px solid ${m.color}33`,
+                      borderRadius: 10, padding: "18px 20px", cursor: "pointer",
+                      fontFamily: "'Cormorant Garamond',serif", textAlign: "left",
+                      transition: "border-color 0.25s",
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.borderColor = m.color + "66"}
+                      onMouseLeave={e => e.currentTarget.style.borderColor = m.color + "33"}
+                    >
+                      <div style={{ width: 4, height: 48, background: m.color, borderRadius: 2, flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontFamily: "'Cinzel',serif", fontSize: 13, color: "#f5f0e8", letterSpacing: "0.06em", marginBottom: 4 }}>{m.label}</div>
+                        <div style={{ fontSize: 13, color: "#706858", fontStyle: "italic" }}>
+                          {m.price ? `${m.price} · ` : ""}{count} piatti
+                          {doneCount > 0 && <span style={{ color: m.color, marginLeft: 8 }}>· ✓ {doneCount}/{count} memorizzati</span>}
+                        </div>
+                      </div>
+                      <div style={{ color: "#303030", fontSize: 18 }}>›</div>
+                    </button>
+                  );
+                })}
+                {/* Tutti */}
+                <button onClick={() => { setActiveMenu("tutti"); setMode(MODES.CARDS); setIdx(0); }} style={{
+                  display: "flex", alignItems: "center", gap: 16,
+                  background: "#0e0e18", border: "1px solid #d4a85322",
+                  borderRadius: 10, padding: "18px 20px", cursor: "pointer",
+                  fontFamily: "'Cormorant Garamond',serif", textAlign: "left",
+                  transition: "border-color 0.25s",
+                }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = "#d4a85355"}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = "#d4a85322"}
+                >
+                  <div style={{ width: 4, height: 48, background: "#d4a853", borderRadius: 2, flexShrink: 0 }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: "'Cinzel',serif", fontSize: 13, color: "#f5f0e8", letterSpacing: "0.06em", marginBottom: 4 }}>Tutti i piatti</div>
+                    <div style={{ fontSize: 13, color: "#706858", fontStyle: "italic" }}>Carta completa · {ALL_DISHES.length} piatti</div>
+                  </div>
+                  <div style={{ color: "#303030", fontSize: 18 }}>›</div>
+                </button>
+              </div>
+            </div>
+
+            {/* Modalità */}
+            <div style={{ fontFamily: "'Cinzel',serif", fontSize: 9, letterSpacing: "0.4em", color: "#504848", marginBottom: 14 }}>MODALITÀ DI ALLENAMENTO</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <ModeBtn icon="◈" title="Flashcard" sub="Studia ogni piatto con script AI. Filtra per menu." onClick={() => setMode(MODES.CARDS)} />
+              <ModeBtn icon="◉" title="Quiz" sub="Domande generate per testare la memorizzazione." onClick={() => setMode(MODES.QUIZ)} />
+              <ModeBtn icon="◎" title="Speed Round" sub="Piatti casuali in 30 secondi — allenamento intensivo." onClick={() => setMode(MODES.SPEED)} />
+              <ModeBtn icon="◇" title="Panoramica" sub="Tutti i piatti con stato di apprendimento." onClick={() => setMode(MODES.REVIEW)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── FLASHCARD ──────────────────────────────────────────── */}
+      {mode === MODES.CARDS && (
+        <Page>
+          <TopBar onBack={() => setMode(MODES.HOME)} title="Flashcard">
+            <button onClick={() => setLang(l => l === "it" ? "en" : "it")} style={{
+              background: "transparent", border: "1px solid #252530", color: "#d4a853",
+              padding: "5px 12px", borderRadius: 4, cursor: "pointer",
+              fontFamily: "'Cinzel',serif", fontSize: 9, letterSpacing: "0.2em",
+            }}>{lang === "it" ? "🇮🇹 IT" : "🇬🇧 EN"}</button>
+          </TopBar>
+
+          <MenuBar onSelect={() => { setIdx(0); setFlipped(false); }} />
+
+          {/* Menu label */}
+          {activeMenu !== "tutti" && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+              <div style={{ width: 3, height: 14, background: menuMeta.color, borderRadius: 2 }} />
+              <span style={{ fontFamily: "'Cinzel',serif", fontSize: 10, letterSpacing: "0.2em", color: menuMeta.color }}>{menuMeta.label.toUpperCase()}</span>
+              {menuMeta.price && <span style={{ color: "#504848", fontSize: 11 }}>· {menuMeta.price}</span>}
+            </div>
+          )}
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+            <span style={{ color: "#504848", fontSize: 12, letterSpacing: "0.08em" }}>
+              {idx + 1} / {filtered.length} · {dish?.section}
+            </span>
+            {progress[dish?.id] && (
+              <span style={{ color: progress[dish.id] === "known" ? "#4a9a5a" : "#9a7a2a", fontSize: 13 }}>
+                {progress[dish.id] === "known" ? "✓ Memorizzato" : "↩ Da ripassare"}
+              </span>
+            )}
+          </div>
+          <ProgressBar val={(idx + 1) / filtered.length} color={menuMeta?.color || "#d4a853"} />
+
+          {/* Card */}
+          <div onClick={() => !loading && setFlipped(f => !f)} style={{
+            background: flipped ? "#0c0c10" : "#10101a",
+            border: `1px solid ${flipped ? (menuMeta?.color || "#d4a853") + "44" : "#252530"}`,
+            borderRadius: 10, overflow: "hidden", marginTop: 18,
+            cursor: loading ? "default" : "pointer", transition: "all 0.3s", minHeight: 270,
+          }}>
+            <div style={{
+              height: 155, backgroundImage: `url(${dish?.img})`,
+              backgroundSize: "cover", backgroundPosition: "center", position: "relative",
+            }}>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom,transparent 35%,#10101a 100%)" }} />
+              <div style={{
+                position: "absolute", top: 10, right: 10,
+                background: "rgba(8,8,13,.75)", border: `1px solid ${menuMeta?.color || "#d4a853"}44`,
+                color: menuMeta?.color || "#d4a853", fontFamily: "'Cinzel',serif",
+                fontSize: 9, padding: "4px 10px", borderRadius: 3, letterSpacing: "0.18em",
+              }}>{dish?.section?.toUpperCase()} · {dish?.price}</div>
+            </div>
+            <div style={{ padding: "18px 22px 26px" }}>
+              {!flipped ? (
+                <div style={{ textAlign: "center" }}>
+                  <h2 style={{ fontFamily: "'Cinzel',serif", fontWeight: 400, fontSize: "clamp(15px,3.8vw,21px)", color: "#f5f0e8", margin: "0 0 10px", letterSpacing: "0.07em" }}>
+                    {dish?.name}
+                  </h2>
+                  <p style={{ color: "#706858", fontStyle: "italic", fontSize: 14, lineHeight: 1.7, margin: "0 0 18px" }}>
+                    {lang === "it" ? dish?.it : dish?.en}
+                  </p>
+                  <div style={{ fontSize: 11, color: "#2e2e2e", letterSpacing: "0.15em" }}>tocca per lo script ›</div>
+                </div>
+              ) : loading ? <Dots /> : (
+                <ScriptBlock lines={parseScript(scripts[dish?.id])} lc={LABEL_COLOR} />
+              )}
+            </div>
+          </div>
+
+          {flipped && !loading && (
+            <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+              <Btn color="#2a1005" border="#6a3a1a" onClick={() => mark(dish, "review")}>↩ Da ripassare</Btn>
+              <Btn color="#052010" border="#2a6a3a" onClick={() => mark(dish, "known")}>✓ Memorizzato</Btn>
+            </div>
+          )}
+          <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+            <NavBtn onClick={() => { setIdx(i => (i - 1 + filtered.length) % filtered.length); setFlipped(false); }}>← Prec</NavBtn>
+            <NavBtn primary color={menuMeta?.color} onClick={() => { setIdx(i => (i + 1) % filtered.length); setFlipped(false); }}>Succ →</NavBtn>
+          </div>
+        </Page>
+      )}
+
+      {/* ── QUIZ ───────────────────────────────────────────────── */}
+      {mode === MODES.QUIZ && (
+        <Page>
+          <TopBar onBack={() => setMode(MODES.HOME)} title="Quiz" />
+          <MenuBar onSelect={() => setIdx(0)} />
+
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+            <span style={{ color: "#504848", fontSize: 12 }}>{idx + 1} / {filtered.length}</span>
+          </div>
+
+          <div style={{ background: "#10101a", border: "1px solid #252530", borderRadius: 10, overflow: "hidden", marginBottom: 16 }}>
+            <div style={{ height: 110, backgroundImage: `url(${dish?.img})`, backgroundSize: "cover", backgroundPosition: "center", position: "relative" }}>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom,transparent 20%,#10101a 100%)" }} />
+            </div>
+            <div style={{ padding: "14px 20px" }}>
+              <div style={{ fontFamily: "'Cinzel',serif", fontSize: "clamp(13px,3.5vw,18px)", color: "#f5f0e8", letterSpacing: "0.07em" }}>{dish?.name}</div>
+              <div style={{ fontStyle: "italic", color: "#706858", fontSize: 13, marginTop: 5 }}>{dish?.section} · {dish?.price}</div>
+            </div>
+          </div>
+
+          {loading ? <Dots /> : quizError ? (
+            <div style={{ textAlign: "center", padding: "32px 0" }}>
+              <div style={{ color: "#ca7a7a", fontStyle: "italic", marginBottom: 20 }}>Errore nel caricamento della domanda.</div>
+              <button onClick={loadQuiz} style={{
+                background: "transparent", border: "1px solid #d4a85344", color: "#d4a853",
+                padding: "10px 28px", borderRadius: 6, cursor: "pointer",
+                fontFamily: "'Cinzel',serif", fontSize: 11, letterSpacing: "0.15em",
+              }}>↺ RIPROVA</button>
+            </div>
+          ) : quizData ? (
+            <div>
+              <p style={{ color: "#c8c0b0", fontSize: 15, lineHeight: 1.7, marginBottom: 18 }}>{quizData.question}</p>
+              {quizData.options.map(opt => {
+                const letter = opt[0];
+                const isCorrect = letter === quizData.correct;
+                const isSelected = letter === quizAns;
+                let bg = "#10101a", border = "#252530", col = "#c8c0b0";
+                if (quizAns) {
+                  if (isCorrect) { bg = "#052010"; border = "#2a6a3a"; col = "#7aca8a"; }
+                  else if (isSelected) { bg = "#200808"; border = "#6a2a2a"; col = "#ca7a7a"; }
+                }
+                return (
+                  <button key={opt} onClick={() => {
+                    if (quizAns) return;
+                    setQuizAns(letter);
+                    mark(dish, letter === quizData.correct ? "known" : "review");
+                  }} style={{
+                    display: "block", width: "100%", textAlign: "left",
+                    background: bg, border: `1px solid ${border}`, borderRadius: 8,
+                    color: col, padding: "12px 16px", marginBottom: 9, fontSize: 14,
+                    cursor: quizAns ? "default" : "pointer",
+                    fontFamily: "'Cormorant Garamond',serif", transition: "all 0.2s",
+                  }}>{opt}</button>
+                );
+              })}
+              {quizAns && (
+                <>
+                  {quizData.explanation && <p style={{ color: "#907858", fontSize: 13, fontStyle: "italic", margin: "6px 0 14px", lineHeight: 1.6 }}>{quizData.explanation}</p>}
+                  <NavBtn primary color={menuMeta?.color} onClick={() => setIdx(i => (i + 1) % filtered.length)}>Prossimo →</NavBtn>
+                </>
+              )}
+            </div>
+          ) : null}
+        </Page>
+      )}
+
+      {/* ── SPEED ──────────────────────────────────────────────── */}
+      {mode === MODES.SPEED && (
+        <Page>
+          <TopBar onBack={() => { clearInterval(timerRef.current); setSpeedActive(false); setMode(MODES.HOME); }} title="Speed Round" />
+          <MenuBar onSelect={() => {}} />
+
+          {!speedActive && !speedDone ? (
+            <div style={{ textAlign: "center", padding: "44px 0" }}>
+              <div style={{ fontSize: 52, marginBottom: 18 }}>⚡</div>
+              <p style={{ color: "#907858", lineHeight: 1.8, fontSize: 15, marginBottom: 14, fontStyle: "italic" }}>
+                Fino a 8 piatti · 30 secondi
+              </p>
+              {activeMenu !== "tutti" && (
+                <p style={{ color: menuMeta?.color, fontSize: 13, fontFamily: "'Cinzel',serif", letterSpacing: "0.1em", marginBottom: 28 }}>
+                  Menu: {menuMeta?.label}
+                </p>
+              )}
+              <button onClick={startSpeed} style={{
+                background: menuMeta?.color || "#d4a853", color: "#08080d", border: "none",
+                padding: "14px 44px", borderRadius: 6, fontFamily: "'Cinzel',serif",
+                fontSize: 13, letterSpacing: "0.2em", cursor: "pointer",
+              }}>INIZIA</button>
+            </div>
+          ) : speedDone ? (
+            <div style={{ textAlign: "center", padding: "44px 0" }}>
+              <div style={{ fontFamily: "'Cinzel',serif", fontSize: 10, letterSpacing: "0.4em", color: "#d4a853", marginBottom: 12 }}>RISULTATO</div>
+              <div style={{ fontSize: 70, fontWeight: 300, color: "#f5f0e8", marginBottom: 6 }}>{speedScore}</div>
+              <div style={{ color: "#706858", fontSize: 15, fontStyle: "italic", marginBottom: 36 }}>su {Math.min(speedI + 1, speedQ.length)} piatti</div>
+              <button onClick={() => { setSpeedDone(false); startSpeed(); }} style={{
+                background: "transparent", color: menuMeta?.color || "#d4a853",
+                border: `1px solid ${menuMeta?.color || "#d4a853"}44`,
+                padding: "12px 36px", borderRadius: 6, fontFamily: "'Cinzel',serif",
+                fontSize: 12, letterSpacing: "0.15em", cursor: "pointer",
+              }}>RIPROVA</button>
+            </div>
+          ) : (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                <div style={{ color: "#504848", fontSize: 12 }}>{speedI + 1} / {speedQ.length}</div>
+                <div style={{ fontFamily: "'Cinzel',serif", fontSize: 26, color: timeLeft <= 10 ? "#ca4a4a" : "#d4a853" }}>{timeLeft}s</div>
+                <div style={{ color: "#4a8a5a", fontSize: 13 }}>✓ {speedScore}</div>
+              </div>
+              <ProgressBar val={timeLeft / 30} color={timeLeft <= 10 ? "#ca4a4a" : menuMeta?.color || "#d4a853"} />
+
+              {speedQ[speedI] && (
+                <div style={{ background: "#10101a", border: "1px solid #252530", borderRadius: 10, overflow: "hidden", marginTop: 18 }}>
+                  <div style={{ height: 130, backgroundImage: `url(${speedQ[speedI].img})`, backgroundSize: "cover", backgroundPosition: "center", position: "relative" }}>
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom,transparent 30%,#10101a 100%)" }} />
+                  </div>
+                  <div style={{ padding: "18px 22px" }}>
+                    <h2 style={{ fontFamily: "'Cinzel',serif", fontWeight: 400, fontSize: "clamp(14px,3.5vw,19px)", color: "#f5f0e8", margin: "0 0 12px", letterSpacing: "0.07em" }}>
+                      {speedQ[speedI].name}
+                    </h2>
+                    {loading ? <Dots /> : <ScriptBlock lines={parseScript(scripts[speedQ[speedI].id])} lc={LABEL_COLOR} compact />}
+                  </div>
+                </div>
+              )}
+              {!loading && (
+                <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+                  <Btn color="#2a1005" border="#6a3a1a" onClick={() => speedNext(false)}>↩ Da ripassare</Btn>
+                  <Btn color="#052010" border="#2a6a3a" onClick={() => speedNext(true)}>✓ Memorizzato</Btn>
+                </div>
+              )}
+            </div>
+          )}
+        </Page>
+      )}
+
+      {/* ── REVIEW ─────────────────────────────────────────────── */}
+      {mode === MODES.REVIEW && (
+        <Page>
+          <TopBar onBack={() => setMode(MODES.HOME)} title="Panoramica" />
+          <MenuBar onSelect={() => {}} />
+
+          {MENUS.filter(m => m.id !== "tutti").map(m => {
+            const dishes = (activeMenu === "tutti" ? ALL_DISHES : ALL_DISHES.filter(d => d.menus.includes(activeMenu)))
+              .filter(d => d.menus.includes(m.id));
+            if (!dishes.length) return null;
+            return (
+              <div key={m.id} style={{ marginBottom: 28 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                  <div style={{ width: 3, height: 12, background: m.color, borderRadius: 2 }} />
+                  <span style={{ fontFamily: "'Cinzel',serif", fontSize: 9, letterSpacing: "0.35em", color: m.color }}>{m.label.toUpperCase()}</span>
+                  {m.price && <span style={{ color: "#404040", fontSize: 10 }}>· {m.price}</span>}
+                </div>
+                {SECTION_ORDER.map(sec => {
+                  const items = dishes.filter(d => d.section === sec);
+                  if (!items.length) return null;
+                  return (
+                    <div key={sec}>
+                      <div style={{ fontFamily: "'Cinzel',serif", fontSize: 8, letterSpacing: "0.3em", color: "#383838", marginBottom: 6, marginTop: 8 }}>{sec.toUpperCase()}</div>
+                      {items.map(d => (
+                        <button key={d.id} onClick={() => {
+                          setActiveMenu(m.id);
+                          const fi = ALL_DISHES.filter(x => x.menus.includes(m.id)).findIndex(x => x.id === d.id);
+                          setIdx(Math.max(0, fi));
+                          setMode(MODES.CARDS); setFlipped(false);
+                        }} style={{
+                          display: "flex", alignItems: "center", gap: 12, width: "100%",
+                          background: "#0e0e18", border: "1px solid #1e1e28", borderRadius: 8,
+                          padding: "11px 14px", marginBottom: 7, cursor: "pointer",
+                          fontFamily: "'Cormorant Garamond',serif", textAlign: "left",
+                          transition: "border-color 0.2s",
+                        }}
+                          onMouseEnter={e => e.currentTarget.style.borderColor = m.color + "44"}
+                          onMouseLeave={e => e.currentTarget.style.borderColor = "#1e1e28"}
+                        >
+                          <div style={{ width: 38, height: 38, borderRadius: 5, backgroundImage: `url(${d.img})`, backgroundSize: "cover", backgroundPosition: "center", flexShrink: 0 }} />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ color: "#d8d0c0", fontSize: 14, fontStyle: "italic", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.name}</div>
+                            <div style={{ color: "#404040", fontSize: 11 }}>{d.price}</div>
+                          </div>
+                          <div style={{ fontSize: 14, flexShrink: 0, color: progress[d.id] === "known" ? "#4a8a5a" : progress[d.id] === "review" ? "#8a6a2a" : "#282828" }}>
+                            {progress[d.id] === "known" ? "✓" : progress[d.id] === "review" ? "↩" : "—"}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </Page>
+      )}
+    </div>
+  );
+}
+
+// ─── UI ATOMS ─────────────────────────────────────────────────────
+function Page({ children }) {
+  return <div style={{ maxWidth: 660, margin: "0 auto", padding: "26px 16px 60px" }}>{children}</div>;
+}
+function TopBar({ onBack, title, children }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 22 }}>
+      <button onClick={onBack} style={{
+        background: "transparent", border: "1px solid #252530", color: "#706858",
+        padding: "7px 14px", borderRadius: 5, cursor: "pointer",
+        fontFamily: "'Cinzel',serif", fontSize: 9, letterSpacing: "0.12em",
+      }}>← INDIETRO</button>
+      <span style={{ fontFamily: "'Cinzel',serif", fontSize: 10, letterSpacing: "0.35em", color: "#d4a853", flex: 1 }}>{title.toUpperCase()}</span>
+      {children}
+    </div>
+  );
+}
+function ScriptBlock({ lines, lc, compact }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: compact ? 10 : 15 }}>
+      {lines.map(({ label, body }, i) => (
+        <div key={i}>
+          {label && <div style={{ fontSize: 8, letterSpacing: "0.35em", color: lc[label] || "#d4a853", marginBottom: 4, fontFamily: "'Cinzel',serif" }}>{label}</div>}
+          <div style={{ fontSize: compact ? 13 : 15, color: "#c8c0b0", lineHeight: 1.7, fontStyle: "italic" }}>{body}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+function Stat({ label, val, c }) {
+  return (
+    <div style={{ textAlign: "center" }}>
+      <div style={{ fontSize: 22, fontWeight: 300, color: c }}>{val}</div>
+      <div style={{ fontSize: 9, letterSpacing: "0.2em", color: "#504848", fontFamily: "'Cinzel',serif" }}>{label.toUpperCase()}</div>
+    </div>
+  );
+}
+function ModeBtn({ icon, title, sub, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      display: "flex", alignItems: "center", gap: 16,
+      background: "#0e0e18", border: "1px solid #1e1e28",
+      borderRadius: 10, padding: "18px 20px", cursor: "pointer",
+      fontFamily: "'Cormorant Garamond',serif", textAlign: "left", transition: "border-color 0.25s",
+    }}
+      onMouseEnter={e => e.currentTarget.style.borderColor = "#d4a85555"}
+      onMouseLeave={e => e.currentTarget.style.borderColor = "#1e1e28"}
+    >
+      <span style={{ fontSize: 20, color: "#d4a853" }}>{icon}</span>
+      <div>
+        <div style={{ fontFamily: "'Cinzel',serif", fontSize: 14, color: "#f5f0e8", letterSpacing: "0.07em", marginBottom: 3 }}>{title}</div>
+        <div style={{ fontSize: 13, color: "#706858", fontStyle: "italic" }}>{sub}</div>
+      </div>
+    </button>
+  );
+}
+function ProgressBar({ val, color = "#d4a853" }) {
+  return (
+    <div style={{ height: 1, background: "#1e1e28", borderRadius: 2, overflow: "hidden", marginBottom: 8 }}>
+      <div style={{ height: "100%", width: `${val * 100}%`, background: color, transition: "width 0.4s ease" }} />
+    </div>
+  );
+}
+function Btn({ children, color, border, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      flex: 1, background: color, border: `1px solid ${border}`,
+      color: "#d8d0c0", padding: "13px", borderRadius: 7, cursor: "pointer",
+      fontFamily: "'Cormorant Garamond',serif", fontSize: 15,
+    }}>{children}</button>
+  );
+}
+function NavBtn({ children, onClick, primary, color }) {
+  return (
+    <button onClick={onClick} style={{
+      flex: 1, background: primary ? "#1a1a28" : "transparent",
+      border: `1px solid ${primary ? "#303045" : "#1e1e28"}`,
+      color: primary ? (color || "#d4a853") : "#504848",
+      padding: "12px", borderRadius: 7, cursor: "pointer",
+      fontFamily: "'Cinzel',serif", fontSize: 10, letterSpacing: "0.12em",
+    }}>{children}</button>
+  );
+}
+function Dots() {
+  return <div style={{ textAlign: "center", padding: "26px 0", color: "#d4a853", letterSpacing: "0.4em", fontSize: 20 }}>· · ·</div>;
+}
+
+
+// Mount
+const container = document.getElementById('app-root');
+const root = ReactDOM.createRoot(container);
+root.render(React.createElement(App));
+
+</script>
+
+</body>
+</html>
